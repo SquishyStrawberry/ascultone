@@ -1,0 +1,24 @@
+
+# The nickname of the bot, this can either be a string or a list
+# When this is a string, if there is a nickname conflict the next nickname
+# tried is the previous nickname plus an underscore, meanwhile if it is a
+# list it runs through each nickname in the list and falls back to the
+# string behavior on the last one.
+nickname: "Ascultone"
+
+# The username of the bot, nothing special about it.
+username: "AscultoneBot"
+
+# The real name of the bot, while normally this would be the real name of
+# the person, there is no real meaningful (or default) value for this.
+realname: "Ascultone IRC Bot"
+
+# The list of channels to automatically join. (WARNING: The channel names MUST
+# be wrapped in double quotes)
+channels:
+    - "#channel"
+    - "#channel2"
+
+# The list of modules to load. (Further info can be found in README.md)
+modules: []
+
