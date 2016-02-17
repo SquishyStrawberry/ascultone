@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+import importlib
 import logging
+import os
 import re
+import sys
 
 from .irc import IrcBot
 from .channel import Channel
@@ -17,6 +20,7 @@ class Ascultone(IrcBot):
         self.on_join = []
         self.commands = {}
         self.triggers = {}
+        self.modules = []
 
     def register_join(self, function):
         self.on_join.append(function)
@@ -30,6 +34,26 @@ class Ascultone(IrcBot):
 
     def quit(self, reason=None):
         super().quit(reason)
+
+    def start(self):
+        if not self.connected:
+            self._connect()
+        for module in self.config.get("modules", []):
+            self.load_file(module)
+        try:
+            self.mainloop()
+        finally:
+            self.quit(self.config.get("quit_message", self.config["realname"]))
+
+    def load_file(self, filename):
+        self.logger.info("Loading module '%s'...", filename)
+        filedir = os.path.abspath(os.path.dirname(filename))
+        modulename = os.path.splitext(os.path.basename(filename))[0]
+        sys.path.insert(0, filedir)
+        module = importlib.import_module(modulename)
+        self.modules.append(module)
+        module.init_module(self)
+        sys.path = sys.path[1:]
 
     def _handle_message(self, message):
         if message.command == "JOIN":
