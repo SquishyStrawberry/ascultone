@@ -4,6 +4,7 @@ import logging
 
 from .user import User
 from .server import Server
+from .channel import Channel
 
 
 class Message(object):
@@ -30,10 +31,10 @@ class Message(object):
 
     def find_source(self, bot):
         assert self.command == "PRIVMSG"
-        if self.params[0] == bot.config["nickname"]:
-            return self.sender.nickname
+        if self.params[0] == bot.nickname:
+            return self.sender
         else:
-            return self.params[0]
+            return Channel(self.params[0])
 
     @classmethod
     def from_line(cls, line):

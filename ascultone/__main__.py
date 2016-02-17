@@ -2,15 +2,12 @@
 import logging
 import yaml
 
-from .irc import IrcBot
+from .ascultone import Ascultone
 
 with open("config.yaml", "r") as config_file:
     config = yaml.safe_load(config_file)
 
 logging.basicConfig(**config["logging"])
-bot = IrcBot(config)
+bot = Ascultone(config)
 
-try:
-    bot.mainloop()
-finally:
-    bot.quit(config.get("quit_message", config["realname"]))
+bot.start()

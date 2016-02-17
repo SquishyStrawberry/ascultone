@@ -78,8 +78,15 @@ class IrcBot(object):
             text += "\r\n"
         self.socket.send(text.encode("utf-8"))
 
+    def _handle_message(self, message):
+        # As you can guess, this is just to be overriden
+        pass
+
     def send_privmsg(self, recipient, text):
         return self._send("PRIVMSG {} :{}".format(recipient, text))
+
+    def send_action(self, recipient, text):
+        return self.send_privmsg(recipient, "\x01ACTION " + text)
 
     def join_channel(self, channel):
         if channel in self.channels:
@@ -88,8 +95,6 @@ class IrcBot(object):
         self.channels.append(channel)
 
     def mainloop(self):
-        if not self.connected:
-            self._connect()
         for channel in self.config["channels"]:
             self.logger.info("Joining channel '%s'", channel)
             self.join_channel(channel)
@@ -97,9 +102,19 @@ class IrcBot(object):
             message = self._get_message()
             if message.command == "PING":
                 self._respond_to_ping(message)
+            else:
+                self._handle_message(message)
 
     def quit(self, reason=None):
         if reason is None:
             self._send("QUIT")
         else:
             self._send("QUIT :{}".format(reason))
+
+    def start(self):
+        if not self.connected:
+            self._connect()
+        try:
+            self.mainloop()
+        finally:
+            self.quit(self.config.get("quit_message", self.config["realname"]))
