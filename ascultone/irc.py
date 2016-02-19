@@ -4,6 +4,9 @@ import logging
 import socket
 
 from .message import Message
+from .channel import Channel
+from .user import User
+from .channel import Channel
 
 
 class IrcBot(object):
@@ -83,6 +86,10 @@ class IrcBot(object):
         pass
 
     def send_privmsg(self, recipient, text):
+        if isinstance(recipient, User):
+            recipient = recipient.nickname
+        elif isinstance(recipient, Channel):
+            recipient = recipient.name
         return self._send("PRIVMSG {} :{}".format(recipient, text))
 
     def send_action(self, recipient, text):

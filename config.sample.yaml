@@ -8,8 +8,7 @@ nickname: "Ascultone"
 # The username of the bot, nothing special about it.
 username: "AscultoneBot"
 
-# The real name of the bot, while normally this would be the real name of
-# the person, there is no real meaningful (or default) value for this.
+# The real name of the bot, while normally this would be the real name of the person, there is no real meaningful (or default) value for this.
 realname: "Ascultone IRC Bot"
 
 # The hostname of the server to connect to.
@@ -37,5 +36,16 @@ logging:
     datefmt: "%Y-%m-%d %H:%M:%S"
 
 # The list of modules to load. (Further info can be found in README.md)
-modules: []
+modules:
+    - "modules/greeter.py"
+
+module_config:
+    greeter:
+        on_self_join_messages:
+            - "jumps in!"
+            - "slides into the room!"
+        on_other_join_messages:
+            - "sits on {}"
+            - "throws pebbles at {}"
+            - "doesn't notice that {} joined"
 
