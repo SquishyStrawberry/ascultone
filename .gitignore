@@ -68,5 +68,7 @@ target/
 # pyenv
 .python-version
 
-# Local configuration file for Ascultone
+# Local files for Ascultone
 config.yaml
+ascultone.db
+

@@ -28,6 +28,10 @@ channels:
 # The quit message that appears once the bot crashes/is closed via SIGINT
 quit_message: "Seeya!"
 
+# Where to store persistent information about Ascultone, you can just set this
+# to ":memory:" if you don't want him to store anything between runs.
+database: "ascultone.db"
+
 # The configuration for the logging module.
 # This is passed directly to `logging.basicConfig`.
 logging:

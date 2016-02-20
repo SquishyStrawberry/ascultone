@@ -3,6 +3,7 @@ import importlib
 import logging
 import os
 import re
+import sqlite3
 import sys
 
 from .irc import IrcBot
@@ -21,6 +22,8 @@ class Ascultone(IrcBot):
         self.commands = {}
         self.triggers = {}
         self.modules = []
+        self.database = sqlite3.connect(config["database"])
+        self.cursor = self.database.cursor()
 
     def register_join(self, function):
         self.on_join.append(function)
@@ -34,6 +37,7 @@ class Ascultone(IrcBot):
 
     def quit(self, reason=None):
         super().quit(reason)
+        self.database.commit()
 
     def start(self):
         if not self.connected:
