@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import eventlet
+eventlet.monkey_patch()
+
 import collections
 import logging
 import socket
@@ -6,7 +9,6 @@ import socket
 from .message import Message
 from .channel import Channel
 from .user import User
-from .channel import Channel
 
 
 class IrcBot(object):
@@ -19,7 +21,7 @@ class IrcBot(object):
         self.connected = False
         self.linebuffer = collections.deque()
         self.channels = []
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket = None
 
     def _get_line(self):
         while not self.linebuffer:
@@ -43,7 +45,8 @@ class IrcBot(object):
         if self.connected:
             return
         self.logger.info("Connecting...")
-        self.socket.connect((self.config["hostname"], self.config["port"]))
+        self.socket = eventlet.connect((self.config["hostname"],
+                                        self.config["port"]))
         if isinstance(self.config["nickname"], str):
             self.nickname = self.config["nickname"]
         else:

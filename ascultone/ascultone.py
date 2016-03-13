@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
+import eventlet
+eventlet.monkey_patch()
+
+import os
 import importlib
 import logging
-import os
 import re
 import sqlite3
 import sys
+
 
 from .irc import IrcBot
 from .channel import Channel
@@ -83,14 +87,15 @@ class Ascultone(IrcBot):
                                  (group_dict["params"] or "").split(" "))
                 if group_dict["command"] in self.commands:
                     function, param_len = self.commands[group_dict["command"]]
-                    # I have 0 idea how to indent this
+                    # I have zero idea how to indent this
                     if isinstance(param_len, int) and \
                             param_len != len(params):
                         return
                     if isinstance(param_len, (tuple, list, set)) and \
                             len(params) not in param_len:
                         return
-                    function(
+                    eventlet.spawn_n(
+                        function,
                         self,
                         message.find_source(self),
                         message.sender,
@@ -103,7 +108,8 @@ class Ascultone(IrcBot):
                     self.logger.info("Matched trigger '%s' to message '%s'",
                                      trigger.pattern,
                                      message.params[1])
-                    response(
+                    eventlet.spawn_n(
+                        response,
                         self,
                         message.find_source(self),
                         message.sender,
