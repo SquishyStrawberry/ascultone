@@ -1,1 +1,2 @@
 PyYAML>=3.10
+eventlet>=0.18.4
