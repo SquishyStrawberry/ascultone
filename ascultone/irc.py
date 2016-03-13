@@ -32,7 +32,7 @@ class IrcBot(object):
         return self.linebuffer.popleft().decode("utf-8")
 
     def _get_message(self):
-        msg = Message.from_line(self._get_line())
+        msg = Message(self._get_line())
         self.logger.debug("Got message '%s'", msg)
         return msg
 
