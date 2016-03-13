@@ -18,19 +18,19 @@ class Ascultone(IrcBot):
 
     def __init__(self, config):
         super().__init__(config)
-        self.on_join = []
+        self.on_join  = []
         self.commands = {}
         self.triggers = {}
-        self.modules = []
+        self.modules  = []
         self.database = sqlite3.connect(config["database"])
-        self.cursor = self.database.cursor()
+        self.cursor   = self.database.cursor()
 
     def register_join(self, function):
         self.on_join.append(function)
 
-    def register_command(self, command, function):
+    def register_command(self, command, function, param_size=None):
         assert self.command_validator.match(command) is not None
-        self.commands[command] = function
+        self.commands[command] = (function, param_size)
 
     def register_trigger(self, trigger, function):
         self.triggers[re.compile(trigger)] = function
@@ -51,12 +51,16 @@ class Ascultone(IrcBot):
 
     def load_file(self, filename):
         self.logger.info("Loading module '%s'...", filename)
+        # This whole song and dance is to that `importlib.import_module`
+        # imports the files from the module folder too.
         filedir = os.path.abspath(os.path.dirname(filename))
         modulename = os.path.splitext(os.path.basename(filename))[0]
         sys.path.insert(0, filedir)
         module = importlib.import_module(modulename)
         self.modules.append(module)
         module.init_module(self)
+        # But of course we don't want modules to import from the module folder
+        # after loading one module.
         sys.path = sys.path[1:]
 
     def _handle_message(self, message):
@@ -78,7 +82,15 @@ class Ascultone(IrcBot):
                                  group_dict,
                                  (group_dict["params"] or "").split(" "))
                 if group_dict["command"] in self.commands:
-                    self.commands[group_dict["command"]](
+                    function, param_len = self.commands[group_dict["command"]]
+                    # I have 0 idea how to indent this
+                    if isinstance(param_len, int) and \
+                            param_len != len(params):
+                        return
+                    if isinstance(param_len, (tuple, list, set)) and \
+                            len(params) not in param_len:
+                        return
+                    function(
                         self,
                         message.find_source(self),
                         message.sender,

@@ -14,4 +14,4 @@ def greeter(bot, sender, channel):
     else:
         msg = random.choice(module_config["on_other_join_messages"])
         bot.send_action(channel,
-                        msg.format(sender.nickname))
+                        msg.format(user=sender.nickname))

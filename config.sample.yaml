@@ -42,6 +42,7 @@ logging:
 # The list of modules to load. (Further info can be found in README.md)
 modules:
     - "modules/greeter.py"
+    - "modules/stomach.py"
 
 module_config:
     greeter:
@@ -49,7 +50,9 @@ module_config:
             - "jumps in!"
             - "slides into the room!"
         on_other_join_messages:
-            - "sits on {}"
-            - "throws pebbles at {}"
-            - "doesn't notice that {} joined"
+            - "sits on {user}"
+            - "throws pebbles at {user}"
+            - "doesn't notice that {user} joined"
+    stomach:
+        stomach_message: "is digesting {victims}..."
 
