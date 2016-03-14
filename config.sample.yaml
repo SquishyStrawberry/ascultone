@@ -45,14 +45,26 @@ modules:
     - "modules/stomach.py"
 
 module_config:
-    greeter:
-        on_self_join_messages:
-            - "jumps in!"
-            - "slides into the room!"
-        on_other_join_messages:
-            - "sits on {user}"
-            - "throws pebbles at {user}"
-            - "doesn't notice that {user} joined"
-    stomach:
-        stomach_message: "is digesting {victims}..."
+    greeter: {}
+    stomach: {}
 
+module_messages:
+    greeter:
+        greetings:
+            - "welcomingly nuzzles and licks {nick}"
+            - "welcomingly nuzzles {nick}"
+            - "welcomingly licks {nick}"
+            - "welcomingly tail-slaps {nick}"
+            - "playfully nuzzles and licks {nick}"
+            - "playfully nuzzles {nick}"
+            - "playfully licks {nick}"
+            - "playfully tail-slaps {nick}"
+            - "tosses a pebble at {nick}"
+            - "joyfully waggles his tail at {nick}'s arrival"
+            - "cheerfully waggles his tail at {nick}'s arrival"
+            - "playfully waggles his tail at {nick}'s arrival"
+            - "welcomes {nick} with a cheerful warble"
+        announce_arrival: "enters the arena!"
+    stomach:
+        stomach: "is digesting {victims}..."
+        eat: "gulps down {victim}!"

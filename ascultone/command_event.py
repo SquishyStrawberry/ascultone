@@ -9,4 +9,11 @@ class CommandEvent(object):
 
     @property
     def source(self):
-        return None
+        if self.message.params[0] == self.bot.nickname:
+            return self.message.sender.nickname
+        else:
+            return self.message.params[0]
+
+    @property
+    def param_text(self):
+        return " ".join(self.params)

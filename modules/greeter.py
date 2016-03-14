@@ -3,15 +3,13 @@ import random
 
 
 def init_module(bot):
-    bot.register_join(greeter)
+    bot.register_join(handler_greet)
 
 
-def greeter(event):
-    module_config = event.bot.config["module_config"]["greeter"]
+def handler_greet(event):
+    messages = event.bot.config["module_messages"]["greeter"]
     if event.sender.nickname == event.bot.nickname:
-        event.bot.send_action(event.channel,
-                              random.choice(module_config["on_self_join_messages"]))
+        event.bot.send_action(event.channel, messages["announce_arrival"])
     else:
-        msg = random.choice(module_config["on_other_join_messages"])
         event.bot.send_action(event.channel,
-                              msg.format(user=event.sender.nickname))
+                              random.choice(messages["greetings"]))

@@ -27,11 +27,12 @@ class Message(object):
         if len(line) > 1:
             found_colon = False
             for param in line[1].split():
-                if param and param[0] == ":":
+                if not found_colon and param and param[0] == ":":
+                    print(repr(param))
                     param = param[1:]
                     found_colon = True
-                    self.params.append("")
-                if found_colon:
+                    self.params.append(param)
+                elif found_colon:
                     self.params[-1] += " " + param
                 else:
                     self.params.append(param)
