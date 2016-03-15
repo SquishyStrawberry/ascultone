@@ -28,7 +28,6 @@ class Message(object):
             found_colon = False
             for param in line[1].split():
                 if not found_colon and param and param[0] == ":":
-                    print(repr(param))
                     param = param[1:]
                     found_colon = True
                     self.params.append(param)

@@ -12,7 +12,7 @@ username: "AscultoneBot"
 realname: "Ascultone IRC Bot"
 
 # The hostname of the server to connect to.
-hostname: "irc.hostname.tld"
+hostname: "irc.editingarchive.com"
 
 # The port of the server to connect to.
 # This is generally 6667 for insecure connections and 6697 if you wanna use
@@ -22,8 +22,7 @@ port: 6667
 # The list of channels to automatically join. (WARNING: The channel names MUST
 # be wrapped in double quotes)
 channels:
-    - "#channel"
-    - "#channel2"
+    - "#bottest"
 
 # The quit message that appears once the bot crashes/is closed via SIGINT
 quit_message: "Seeya!"
@@ -39,14 +38,14 @@ logging:
     format: "[%(asctime)s @ %(name)s %(levelname)s] %(message)s"
     datefmt: "%Y-%m-%d %H:%M:%S"
 
-# The list of modules to load. (Further info can be found in README.md)
+# The list of modules to load, each item is passed to glob (Further info can be found in README.md)
 modules:
-    - "modules/greeter.py"
-    - "modules/stomach.py"
+    - "modules/*.py"
 
 module_config:
     greeter: {}
     stomach: {}
+    attacker: {}
 
 module_messages:
     greeter:
@@ -68,3 +67,11 @@ module_messages:
     stomach:
         stomach: "is digesting {victims}..."
         eat: "gulps down {victim}!"
+    attacker:
+        attacks:
+            - "shoots a plasma bolt at {target}!"
+            - "hurls a pebble at {target}!"
+            - "tackles {target}!"
+            - "tail-whips {target}!"
+            - "charges {target}!"
+            - "unsheathes his teeth and bites {target}!"

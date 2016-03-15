@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import eventlet; eventlet.monkey_patch()
+import glob
 import importlib
 import logging
 import os
@@ -15,7 +16,15 @@ from .join_event import JoinEvent
 
 class Ascultone(IrcBot):
     logger = logging.getLogger(__name__)
+    action_prefix = "\x0303\u200B"
+
     def __init__(self, config):
+        self.logger.info("Expanding module list %s...", config["modules"])
+        new_modules = []
+        for module in config["modules"]:
+            new_modules.extend(glob.glob(module))
+        self.logger.info("New module list: %s", new_modules)
+        config["modules"] = new_modules
         super().__init__(config)
         self.on_join  = []
         self.commands = {}
@@ -23,6 +32,9 @@ class Ascultone(IrcBot):
         self.modules  = []
         self.database = sqlite3.connect(config["database"])
         self.cursor   = self.database.cursor()
+
+    def send_action(self, recipient, text):
+        return super().send_action(recipient, self.action_prefix + text)
 
     def register_join(self, function):
         self.on_join.append(function)
