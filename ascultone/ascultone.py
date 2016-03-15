@@ -10,8 +10,7 @@ import traceback
 
 from .irc import IrcBot
 from .channel import Channel
-from .command_event import CommandEvent
-from .join_event import JoinEvent
+from .events import CommandEvent, JoinEvent
 
 
 class Ascultone(IrcBot):
@@ -53,6 +52,8 @@ class Ascultone(IrcBot):
             self.load_file(module)
         try:
             self.mainloop()
+        except KeyboardInterrupt:
+            pass
         finally:
             self.quit(self.config.get("quit_message", self.config["realname"]))
 

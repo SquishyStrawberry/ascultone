@@ -11,5 +11,6 @@ def handler_greet(event):
     if event.sender.nickname == event.bot.nickname:
         event.bot.send_action(event.channel, messages["announce_arrival"])
     else:
+        greeting = random.choice(messages["greetings"])
         event.bot.send_action(event.channel,
-                              random.choice(messages["greetings"]))
+                              greeting.format(nick=event.sender.nickname))

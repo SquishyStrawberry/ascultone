@@ -126,5 +126,7 @@ class IrcBot(object):
             self._connect()
         try:
             self.mainloop()
+        except KeyboardInterrupt:
+            pass
         finally:
             self.quit(self.config.get("quit_message", self.config["realname"]))
