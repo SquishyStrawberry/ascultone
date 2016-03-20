@@ -25,7 +25,7 @@ class Ascultone(IrcBot):
         self.logger.info("New module list: %s", new_modules)
         config["modules"] = new_modules
         super().__init__(config)
-        self.on_join  = []
+        self.on_join  = self.on_privmsg = []
         self.commands = {}
         self.triggers = {}
         self.modules  = []
@@ -37,6 +37,9 @@ class Ascultone(IrcBot):
 
     def register_join(self, function):
         self.on_join.append(function)
+
+    def register_privmsg(self, function):
+        self.on_privmsg.append(function)
 
     def register_command(self, command, function):
         self.commands[command] = function
@@ -88,6 +91,11 @@ class Ascultone(IrcBot):
                     JoinEvent(self, sender, channel)
                 )
         elif message.command == "PRIVMSG":
+            for handler in self.on_privmsg:
+                eventlet.spawn_n(
+                    handler,
+                    PrivmsgEvent(self, message)
+                )
             message_split = message.params[1].split()
             if message_split[0] in (self.nickname, self.nickname + "!"):
                 command = message_split[1]
