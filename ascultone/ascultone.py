@@ -17,6 +17,11 @@ class Ascultone(IrcBot):
     logger = logging.getLogger(__name__)
     action_prefix = "\x0303\u200B"
 
+    class flags:  # namespaces are one honking great idea!
+        admin       = 1 << 0
+        whitelisted = 1 << 1
+
+
     def __init__(self, config):
         self.logger.info("Expanding module list %s...", config["modules"])
         new_modules = []
@@ -31,6 +36,12 @@ class Ascultone(IrcBot):
         self.modules  = []
         self.database = sqlite3.connect(config["database"])
         self.cursor   = self.database.cursor()
+        self.cursor.execute(
+            "CREATE TABLE IF NOT EXISTS Flags"
+            "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            " user TEXT NOT NULL,"
+            " flags UNSIGNED INT"
+        )
 
     def send_action(self, recipient, text):
         return super().send_action(recipient, self.action_prefix + text)
@@ -47,6 +58,63 @@ class Ascultone(IrcBot):
     def quit(self, reason=None):
         super().quit(reason)
         self.database.commit()
+
+    def add_flag(self, user, flag):
+        if isinstance(flag, str):
+            flag = getattr(self.flags, flag)
+            assert isinstance(flag, int)
+        self.cursor.execute(
+            "SELECT flags "
+            "FROM Flags "
+            "WHERE user = ?", (user,)
+        )
+        current_flags = self.cursor.fetchone()
+        if current_flags is None:
+            self.cursor.execute(
+                "INSERT INTO Flags(user, flags) "
+                "VALUES "
+                "(?, ?)", (user, flag)
+            )
+        else:
+            self.cursor.execute(
+                "UPDATE Flags "
+                "SET flags = ? "
+                "WHERE user = ?", (current_flags[0] | flag, user)
+            )
+
+    def remove_flag(self, user, flag):
+        if isinstance(flag, str):
+            flag = getattr(self.flags, flag)
+            assert isinstance(flag, int)
+        self.cursor.execute(
+            "SELECT flags "
+            "FROM Flags "
+            "WHERE user = ?", (user,)
+        )
+        current_flags = self.cursor.fetchone()
+        if current_flags is not None and current_flags[0] & flag:
+            self.cursor.execute(
+                "UPDATE Flags "
+                "SET flags = ? "
+                "WHERE user = ?", (current_flags[0] ^ flag, user)
+            )
+
+    def has_flag(self, user, flag):
+        if isinstance(flag, str):
+            flag = getattr(self.flags, flag)
+            assert isinstance(flag, int)
+        self.cursor.execute(
+            "SELECT flags "
+            "FROM Flags "
+            "WHERE user = ?", (user,)
+        )
+        current_flags = self.cursor.fetchone()
+        return current_flags is not None and current_flags & flag
+
+    # We can just OR multiple flags together
+    add_flags = add_flag
+    remove_flags = remove_flag
+    has_flags = has_flag
 
     def start(self):
         if not self.connected:
