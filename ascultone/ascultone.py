@@ -10,7 +10,8 @@ import traceback
 
 from .irc import IrcBot
 from .channel import Channel
-from .events import CommandEvent, JoinEvent
+from .events import CommandEvent, JoinEvent, PrivmsgEvent
+from .user import User
 
 
 class Ascultone(IrcBot):
@@ -30,17 +31,18 @@ class Ascultone(IrcBot):
         self.logger.info("New module list: %s", new_modules)
         config["modules"] = new_modules
         super().__init__(config)
-        self.on_join  = self.on_privmsg = []
-        self.commands = {}
-        self.triggers = {}
-        self.modules  = []
-        self.database = sqlite3.connect(config["database"])
-        self.cursor   = self.database.cursor()
+        self.on_join    = []
+        self.on_privmsg = []
+        self.commands   = {}
+        self.triggers   = {}
+        self.modules    = []
+        self.database   = sqlite3.connect(config["database"])
+        self.cursor     = self.database.cursor()
         self.cursor.execute(
             "CREATE TABLE IF NOT EXISTS Flags"
             "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
             " user TEXT NOT NULL,"
-            " flags UNSIGNED INT"
+            " flags UNSIGNED INTEGER)"
         )
 
     def send_action(self, recipient, text):
@@ -63,6 +65,8 @@ class Ascultone(IrcBot):
         if isinstance(flag, str):
             flag = getattr(self.flags, flag)
             assert isinstance(flag, int)
+        if isinstance(user, User):
+            user = user.nickname
         self.cursor.execute(
             "SELECT flags "
             "FROM Flags "
@@ -86,6 +90,8 @@ class Ascultone(IrcBot):
         if isinstance(flag, str):
             flag = getattr(self.flags, flag)
             assert isinstance(flag, int)
+        if isinstance(user, User):
+            user = user.nickname
         self.cursor.execute(
             "SELECT flags "
             "FROM Flags "
@@ -103,13 +109,16 @@ class Ascultone(IrcBot):
         if isinstance(flag, str):
             flag = getattr(self.flags, flag)
             assert isinstance(flag, int)
+        if isinstance(user, User):
+            user = user.nickname
         self.cursor.execute(
             "SELECT flags "
             "FROM Flags "
             "WHERE user = ?", (user,)
         )
         current_flags = self.cursor.fetchone()
-        return current_flags is not None and current_flags & flag
+        print(bin(current_flags[0]), bin(flag))
+        return current_flags is not None and current_flags[0] & flag
 
     # We can just OR multiple flags together
     add_flags = add_flag

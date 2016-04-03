@@ -10,5 +10,9 @@ class CommandEvent(EventSourceMixin):
         self.params = params
 
     @property
+    def sender(self):
+        return self.message.sender
+
+    @property
     def param_text(self):
         return " ".join(self.params)

@@ -2,4 +2,4 @@
 
 from .command_event import CommandEvent
 from .join_event import JoinEvent
-from .command_event import CommandEvent
+from .privmsg_event import PrivmsgEvent
