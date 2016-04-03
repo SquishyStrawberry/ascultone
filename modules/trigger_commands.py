@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 import re
 
+GROUP_REGEXP = re.compile(
+    r"\$\{(.*?)\}"
+)
+
 # TODO Maybe refactor this into a class..?
 compiled_triggers = {}
 
@@ -59,7 +63,7 @@ def trigger_dispatcher(event):
                 "sender": event.sender.nickname
             }
             groups.update(trigger_match.groupdict())
-            for match in re.finditer(r"\$\{(.*?)\}", response):
+            for match in GROUP_REGEXP.finditer(response):
                 try:
                     response = response.replace(match.group(0),
                                                 groups[match.group(1)])
