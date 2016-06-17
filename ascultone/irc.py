@@ -24,11 +24,14 @@ class IrcBot(object):
         self.socket = None
 
     def _get_line(self):
+        chunk = b""
         while not self.linebuffer:
-            chunk = self.socket.recv(self.CHUNK_SIZE)
-            for line in chunk.splitlines():
-                if line:
-                    self.linebuffer.append(line)
+            chunk += self.socket.recv(self.CHUNK_SIZE)
+            if chunk.endswith(b"\n"):
+                for line in chunk.splitlines():
+                    if line:
+                        self.linebuffer.append(line)
+                break
         return self.linebuffer.popleft().decode("utf-8")
 
     def _get_message(self):

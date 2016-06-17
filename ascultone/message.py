@@ -12,6 +12,7 @@ class Message(object):
         self.line = line
         if line[0] == ":":
             line = line[1:]
+            print(len(line), repr(line))
             sender, line = line.split(" ", 1)
             if sender.find("!") == -1:
                 # This is a probably server
