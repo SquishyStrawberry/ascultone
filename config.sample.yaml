@@ -38,40 +38,47 @@ logging:
     format: "[%(asctime)s @ %(name)s %(levelname)s] %(message)s"
     datefmt: "%Y-%m-%d %H:%M:%S"
 
-# The list of modules to load, each item is passed to glob (Further info can be found in README.md)
 modules:
-    - "modules/*.py"
+    # The list of modules to load, each item is passed to glob (Further info can be found in README.md)
+    files:
+        - "modules/*.py"
 
-module_config:
-    greeter: {}
-    stomach: {}
-    attacker: {}
+    # Specific configuration for different modules
+    config:
+        greeter: {}
+        stomach: {}
+        attacker: {}
 
-module_messages:
-    greeter:
-        greetings:
-            - "welcomingly nuzzles and licks {nick}"
-            - "welcomingly nuzzles {nick}"
-            - "welcomingly licks {nick}"
-            - "welcomingly tail-slaps {nick}"
-            - "playfully nuzzles and licks {nick}"
-            - "playfully nuzzles {nick}"
-            - "playfully licks {nick}"
-            - "playfully tail-slaps {nick}"
-            - "tosses a pebble at {nick}"
-            - "joyfully waggles his tail at {nick}'s arrival"
-            - "cheerfully waggles his tail at {nick}'s arrival"
-            - "playfully waggles his tail at {nick}'s arrival"
-            - "welcomes {nick} with a cheerful warble"
-        announce_arrival: "enters the arena!"
-    stomach:
-        stomach: "is digesting {victims}..."
-        eat: "gulps down {victim}!"
-    attacker:
-        attacks:
-            - "shoots a plasma bolt at {target}!"
-            - "hurls a pebble at {target}!"
-            - "tackles {target}!"
-            - "tail-whips {target}!"
-            - "charges {target}!"
-            - "unsheathes his teeth and bites {target}!"
+    # The different messages to use for the modules
+    messages:
+        greeter:
+            greetings:
+                - "welcomingly nuzzles and licks {nick}"
+                - "welcomingly nuzzles {nick}"
+                - "welcomingly licks {nick}"
+                - "welcomingly tail-slaps {nick}"
+                - "playfully nuzzles and licks {nick}"
+                - "playfully nuzzles {nick}"
+                - "playfully licks {nick}"
+                - "playfully tail-slaps {nick}"
+                - "tosses a pebble at {nick}"
+                - "joyfully waggles his tail at {nick}'s arrival"
+                - "cheerfully waggles his tail at {nick}'s arrival"
+                - "playfully waggles his tail at {nick}'s arrival"
+                - "welcomes {nick} with a cheerful warble"
+            announce_arrival: "enters the arena!"
+        stomach:
+            stomach: "is digesting {victims}..."
+            eat: "gulps down {victim}!"
+            spit: "spits out {victim}!"
+            spit_superfluous: "hasn't eaten {victim} yet!"
+            vomit: "empties his stomach!"
+            vomit_superfluous: "hasn't eaten anything yet!"
+        attacker:
+            attacks:
+                - "shoots a plasma bolt at {target}!"
+                - "hurls a pebble at {target}!"
+                - "tackles {target}!"
+                - "tail-whips {target}!"
+                - "charges {target}!"
+                - "unsheathes his teeth and bites {target}!"

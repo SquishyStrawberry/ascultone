@@ -7,7 +7,7 @@ def init_module(bot):
 
 
 def command_attack(event):
-    messages = event.bot.config["module_messages"]["attacker"]
+    messages = event.bot.config["modules"]["messages"]["attacker"]
     attack = random.choice(messages["attacks"])
     event.bot.send_action(event.source,
                           attack.format(target=event.param_text))

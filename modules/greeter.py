@@ -7,7 +7,7 @@ def init_module(bot):
 
 
 def handler_greet(event):
-    messages = event.bot.config["module_messages"]["greeter"]
+    messages = event.bot.config["modules"]["messages"]["greeter"]
     if event.sender.nickname == event.bot.nickname:
         event.bot.send_action(event.channel, messages["announce_arrival"])
     else:

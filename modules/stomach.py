@@ -13,7 +13,7 @@ def init_module(bot):
 
 
 def command_eat(event):
-    messages = event.bot.config["module_messages"]["stomach"]
+    messages = event.bot.config["modules"]["messages"]["stomach"]
     victim = event.param_text
 
     event.bot.cursor.execute(
@@ -25,7 +25,7 @@ def command_eat(event):
 
 
 def command_spit(event):
-    messages = event.bot.config["module_messages"]["stomach"]
+    messages = event.bot.config["modules"]["messages"]["stomach"]
     victim = event.param_text
     event.bot.cursor.execute(
         "SELECT victim FROM Stomach "
@@ -44,7 +44,7 @@ def command_spit(event):
 
 
 def command_vomit(event):
-    messages = event.bot.config["module_messages"]["stomach"]
+    messages = event.bot.config["modules"]["messages"]["stomach"]
 
     event.bot.cursor.execute(
         "SELECT victim FROM Stomach"
@@ -63,7 +63,7 @@ def command_stomach(event):
         "SELECT victim FROM Stomach"
     )
     victims = list({i[0] for i in event.bot.cursor.fetchall()})
-    message = event.bot.config["module_messages"]["stomach"]["stomach"]
+    message = event.bot.config["modules"]["messages"]["stomach"]["stomach"]
     if not victims:
         items = "nothing"
     elif len(victims) == 1:

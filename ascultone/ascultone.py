@@ -24,12 +24,13 @@ class Ascultone(IrcBot):
 
 
     def __init__(self, config):
-        self.logger.info("Expanding module list %s...", config["modules"])
+        self.logger.info("Expanding module list %s...",
+                         config["modules"]["files"])
         new_modules = []
-        for module in config["modules"]:
+        for module in config["modules"]["files"]:
             new_modules.extend(glob.glob(module))
         self.logger.info("New module list: %s", new_modules)
-        config["modules"] = new_modules
+        config["modules"]["files"] = new_modules
         super().__init__(config)
         self.on_join    = []
         self.on_privmsg = []
@@ -117,7 +118,6 @@ class Ascultone(IrcBot):
             "WHERE user = ?", (user,)
         )
         current_flags = self.cursor.fetchone()
-        print(bin(current_flags[0]), bin(flag))
         return current_flags is not None and current_flags[0] & flag
 
     # We can just OR multiple flags together
@@ -128,7 +128,7 @@ class Ascultone(IrcBot):
     def start(self):
         if not self.connected:
             self._connect()
-        for module in self.config.get("modules", []):
+        for module in self.config.get("modules", {}).get("files", []):
             self.load_file(module)
         try:
             self.mainloop()
