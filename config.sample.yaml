@@ -82,3 +82,6 @@ modules:
                 - "tail-whips {target}!"
                 - "charges {target}!"
                 - "unsheathes his teeth and bites {target}!"
+        trigger_commands:
+            learn: "has been trained by {nick}!"
+            forget: "forgot one of his tricks!"

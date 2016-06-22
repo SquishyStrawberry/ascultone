@@ -33,6 +33,7 @@ def init_module(bot):
 def add_trigger(event):
     if not event.bot.has_flag(event.sender, "whitelisted"):
         return
+    messages = event.bot.config["modules"]["messages"]["trigger_commands"]
     trigger, response = event.param_text.split(" -> ")
     compiled_trigger = re.compile(trigger)
     compiled_triggers[compiled_trigger] = response
@@ -40,11 +41,14 @@ def add_trigger(event):
         "INSERT INTO Triggers(trigger, response) "
         "VALUES (?, ?)", (trigger, response)
     )
+    event.bot.send_action(event.source,
+                          messages["learn"].format(nick=event.sender.nickname))
 
 
 def remove_trigger(event):
     if not event.bot.has_flag(event.sender, "whitelisted"):
         return
+    messages = event.bot.config["modules"]["messages"]["trigger_commands"]
     trigger = event.param_text
     compiled_trigger = re.compile(trigger)
     del compiled_triggers[compiled_trigger]
@@ -52,6 +56,7 @@ def remove_trigger(event):
         "DELETE FROM Triggers "
         "WHERE trigger=?", (trigger,)
     )
+    event.bot.send_action(event.source, messages["forget"])
 
 
 def trigger_dispatcher(event):
@@ -59,8 +64,8 @@ def trigger_dispatcher(event):
         trigger_match = trigger.search(event.text)
         if trigger_match is not None:
             groups = {
-                "nick": event.bot.nickname,
-                "sender": event.sender.nickname
+                "botnick": event.bot.nickname,
+                "nick": event.sender.nickname
             }
             groups.update(trigger_match.groupdict())
             for match in GROUP_REGEXP.finditer(response):
