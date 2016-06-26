@@ -99,7 +99,7 @@ class IrcBot(object):
         return self._send("PRIVMSG {} :{}".format(recipient, text))
 
     def send_action(self, recipient, text):
-        return self.send_privmsg(recipient, "\x01ACTION " + text)
+        return self.send_privmsg(recipient, "\x01ACTION " + text + "\x01")
 
     def join_channel(self, channel):
         if channel in self.channels:
