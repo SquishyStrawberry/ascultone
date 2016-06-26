@@ -21,6 +21,8 @@ class Ascultone(IrcBot):
     class flags:  # namespaces are one honking great idea!
         admin       = 1 << 0
         whitelisted = 1 << 1
+        nogreet     = 1 << 2
+        ignore      = 1 << 3
 
 
     def __init__(self, config):

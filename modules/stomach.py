@@ -21,7 +21,7 @@ def command_eat(event):
         "VALUES (?)", (victim,)
     )
     event.bot.send_action(event.source,
-                           messages["eat"].format(victim=victim))
+                          messages["eat"].format(victim=victim))
 
 
 def command_spit(event):
