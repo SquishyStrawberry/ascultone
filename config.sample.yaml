@@ -1,3 +1,5 @@
+---
+
 # The nickname of the bot, this can either be a string or a list
 # When this is a string, if there is a nickname conflict the next nickname
 # tried is the previous nickname plus an underscore, meanwhile if it is a
@@ -8,7 +10,8 @@ nickname: "Ascultone"
 # The username of the bot, nothing special about it.
 username: "AscultoneBot"
 
-# The real name of the bot, while normally this would be the real name of the person, there is no real meaningful (or default) value for this.
+# The real name of the bot, while normally this would be the real name
+# the person, there is no real meaningful (or default) value for this.
 realname: "Ascultone IRC Bot"
 
 # The hostname of the server to connect to.
@@ -38,8 +41,20 @@ logging:
     format: "[%(asctime)s @ %(name)s %(levelname)s] %(message)s"
     datefmt: "%Y-%m-%d %H:%M:%S"
 
+flags:
+    exampleNick:
+        - "whitelisted"
+
+    exampleAdmin:
+        - "admin"
+
+    exampleMultiple:
+        - "admin"
+        - "nogreet"
+
 modules:
-    # The list of modules to load, each item is passed to glob (Further info can be found in README.md)
+    # The list of modules to load, each item is passed to glob
+    # (Further info can be found in README.md)
     files:
         - "modules/*.py"
 
