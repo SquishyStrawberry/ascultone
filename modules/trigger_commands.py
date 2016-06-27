@@ -31,7 +31,8 @@ def init_module(bot):
 
 
 def add_trigger(event):
-    if not event.bot.has_flag(event.sender, "whitelisted"):
+    if not event.bot.has_flag(event.sender, "whitelisted") and \
+       not event.bot.has_flag(event.sender, "admin"):
         return
     messages = event.bot.config["modules"]["messages"]["trigger_commands"]
     trigger, response = event.param_text.split(" -> ")
@@ -46,7 +47,8 @@ def add_trigger(event):
 
 
 def remove_trigger(event):
-    if not event.bot.has_flag(event.sender, "whitelisted"):
+    if not event.bot.has_flag(event.sender, "whitelisted") and \
+       not event.bot.has_flag(event.sender, "admin"):
         return
     messages = event.bot.config["modules"]["messages"]["trigger_commands"]
     trigger = event.param_text
