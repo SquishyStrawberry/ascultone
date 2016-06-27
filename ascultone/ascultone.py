@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 import eventlet; eventlet.monkey_patch()
-import functools
 import glob
 import importlib
 import logging
-import operator
 import os
 import sqlite3
 import sys
@@ -53,7 +51,8 @@ class Ascultone(IrcBot):
 
     def _initialize_flags_from_config(self):
         for nick, flags in self.config["flags"].items():
-            self.add_flag(nick, functools.reduce(operator.or_, flags))
+            for flag in flags:
+                self.add_flag(nick, flag)
 
     def send_action(self, recipient, text):
         return super().send_action(recipient, self.action_prefix + text)
