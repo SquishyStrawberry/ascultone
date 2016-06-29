@@ -182,7 +182,8 @@ class Ascultone(IrcBot):
                     PrivmsgEvent(self, message)
                 )
             message_split = message.params[1].split()
-            if message_split[0] in (self.nickname, self.nickname + "!"):
+            if message_split[0] in (self.nickname, self.nickname + "!") and \
+               len(message_split) > 1:
                 command = message_split[1]
                 params = message_split[2:]
                 self.logger.info("Got command '%s' with params %s",
